@@ -1,0 +1,27 @@
+python tester specs
+
+Cases:
+
+1. interactive shell format
+
+   run as doctest
+   save as is
+
+2. functions and classes not in shell format, then used in code in
+   shell format
+
+   def or class statements (and decorators and imports? and triple
+   quoted docstrings?) - converted to shell format? or put into temp
+   file and imported? 
+
+   save as is...
+
+3. modules imported and used in shell
+   beginning with "file filename" or in module windows
+
+   save as filename for importing by shell... save shell as is 
+
+4. stand-alone modules
+
+Save as... 
+
