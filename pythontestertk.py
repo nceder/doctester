@@ -38,16 +38,17 @@ class TesterGUI(PanedWindow):
         self.code_frame.grid(row=1, column=0, sticky="nsew")
         self.doctest_vert_scroller = Scrollbar(self.code_frame, orient='vertical')
         self.doctest_vert_scroller.grid(row=2, column=1, sticky='nsew')
-        self.doctest = Text(self.code_frame, yscrollcommand=self.doctest_vert_scroller.set, height=20)
+        self.doctest_horz_scroller = Scrollbar(self.code_frame, orient='horizontal')
+        self.doctest_horz_scroller.grid(row=3, column=0, sticky='ew')
+        self.doctest = Text(self.code_frame, xscrollcommand=self.doctest_horz_scroller.set, yscrollcommand=self.doctest_vert_scroller.set, height=20, wrap="none")
         self.doctest.grid(row=2, column=0, sticky='nsew')
+        self.doctest_vert_scroller.config(command=self.doctest.yview)
+        self.doctest_horz_scroller.config(command=self.doctest.xview)
         self.doctest.bind_class("Text", "<Button-3><ButtonRelease-3>", self.show_menu)
         # if platform is not windows
         self.doctest.bind_class("Text","<Control-v>", self.paste)
         self.doctest.bind_class("Text","<Control-c>", self.copy)
         self.doctest.bind_class("Text","<Control-x>", self.cut)
-        self.doctest_vert_scroller.config(command=self.doctest.yview)
-        self.doctest_horz_scroller = Scrollbar(self.code_frame, orient='horizontal')
-        self.doctest_horz_scroller.grid(row=3, column=0, sticky='ew')
 
         self.plain_code_vert_scroller = Scrollbar(self.code_frame, orient='vertical')
         self.plain_code_vert_scroller.grid(row=0, column=1, sticky='ns')
@@ -62,12 +63,14 @@ class TesterGUI(PanedWindow):
 
         self.results_vert_scroller = Scrollbar(self.test_frame, orient='vertical')
         self.results_vert_scroller.grid(row=0, column=1, sticky='nesw')
-        self.results = Text(self.test_frame, yscrollcommand=self.results_vert_scroller.set, height=35)
-        self.results.grid(row=0, column=0, sticky='nesw')
-        self.results.config(state=DISABLED)
-        self.results_vert_scroller.config(command=self.results.yview)
         self.results_horz_scroller = Scrollbar(self.test_frame, orient='horizontal')
         self.results_horz_scroller.grid(row=5, column=0, sticky='nesw')
+        self.results = Text(self.test_frame, xscrollcommand=self.results_horz_scroller.set, yscrollcommand=self.results_vert_scroller.set, height=35, wrap="none")
+        
+        self.results_vert_scroller.config(command=self.results.yview)
+        self.results_horz_scroller.config(command=self.results.xview)
+        self.results.grid(row=0, column=0, sticky='nesw')
+        self.results.config(state=DISABLED)
 
     def create_button_frame(self):
         self.button_frame = Frame(self)
@@ -121,9 +124,6 @@ class TesterGUI(PanedWindow):
         output = subprocess.Popen(["python3", "test.py", verbose],
                                   stdout=subprocess.PIPE).communicate()[0]
 
-    #    print(output)
-        # strip of any trailing #'s 
-        # call with python3
         # capture output to new other window...
         self.results.tag_config("out", foreground="red")
         self.results.config(state=NORMAL)
@@ -189,4 +189,4 @@ class TesterGUI(PanedWindow):
 
 app = TesterGUI()
 app.mainloop()
-#mainloop() # again omit this if you are in IDLE
+
