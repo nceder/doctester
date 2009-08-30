@@ -10,7 +10,7 @@ template = """%s\"\"\"\n%s\n\"\"\"
 
 import doctest
 
-doctest.testmod()
+doctest.testmod(optionflags=doctest.NORMALIZE_WHITESPACE)
 """
 
 class TesterGUI(PanedWindow):
@@ -24,10 +24,14 @@ class TesterGUI(PanedWindow):
         self.pack(fill=BOTH, expand=1)
         self.top_frame = Frame(self)
         self.top_frame.grid(row=0, column=0, sticky="nsew")
+        self.chapter_label = Label(self.top_frame, text="Chapter")
+        self.chapter_label.grid(row=0, column=0)
+        self.chapter = Entry(self.top_frame)
+        self.chapter.grid(row=0, column=1)
         self.location_label = Label(self.top_frame, text="location")
-        self.location_label.grid(row=0, column=0)
+        self.location_label.grid(row=0, column=2)
         self.location = Entry(self.top_frame)
-        self.location.grid(row=0, column=1)
+        self.location.grid(row=0, column=3)
         self.create_code_frame()
         self.create_test_frame()
         self.create_button_frame()
@@ -134,10 +138,12 @@ class TesterGUI(PanedWindow):
         self.test(verbose="-v")
 
     def save(self):
-        savefile = open("testsave.txt", "a")
-        savefile.write(location.get()+"\n\n")
-        savefile.write(self.plain_code.get(1.0, END).rstrip()+"\n\n")
-        savefile.write(self.doctest.get(1.0, END))
+        chap = self.chapter.get()
+        savefile = open("ch%s_code.txt" % chap, "a")
+        outstring = "\n%s.%s\n\n" % (chap, self.location.get())
+        outstring += (self.plain_code.get(1.0, END).rstrip()+"\n\n").lstrip()
+        outstring += self.doctest.get(1.0, END)
+        savefile.write(outstring)
         savefile.close()
 
     def clear_all(self):
@@ -189,4 +195,3 @@ class TesterGUI(PanedWindow):
 
 app = TesterGUI()
 app.mainloop()
-#mainloop() # again omit this if you are in IDLE
