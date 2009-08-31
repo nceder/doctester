@@ -3,12 +3,15 @@
 
    Vern Ceder, 06-13-2009
 """
-python_exe = "python3"
-testfile = "test.py"
 
 import sys, subprocess
 from tkinter import *
-template = """%s\"\"\"\n%s\n\"\"\"
+
+python_exe = "python3"
+testfile = "test.py"
+ch_filename_template = "ch{0:0>2}_code.txt"
+ch_header_template = "{0:0>2}.{1}\n\n"
+template = """{0}\"\"\"\n{01}\n\"\"\"
 
 import doctest
 
@@ -112,6 +115,7 @@ class TesterGUI(PanedWindow):
         for line in text.split("\n"):
             if not line.startswith(">>>"):
                 pos =  line.find("#")
+                # strip output lines of any trailing #'s (Manning code anno's)
                 if pos > 0:
                     line = line[:pos].rstrip()
             if "\\" in line:
@@ -120,17 +124,15 @@ class TesterGUI(PanedWindow):
         text = "\n".join(newlines)
         text = plaintext + text
 
+        # write to testfile, call with python_exe
         outfile = open(testfile, "w")
-        outfile.write(template % (raw,text))
+        outfile.write(template.format(raw,text))
         outfile.close()
 
         output = subprocess.Popen([python_exe, testfile, verbose],
                                   stdout=subprocess.PIPE).communicate()[0]
 
-    #    print(output)
-        # strip of any trailing #'s 
-        # call with python3
-        # capture output to new other window...
+        # capture output to results window...
         self.results.tag_config("out", foreground="red")
         self.results.config(state=NORMAL)
         self.results.insert(END, output, "out")
@@ -141,10 +143,14 @@ class TesterGUI(PanedWindow):
 
     def save(self):
         chap = self.chapter.get()
-        savefile = open("ch%s_code.txt" % chap, "a")
-        outstring = "\n%s.%s\n\n" % (chap, self.location.get())
-        outstring += (self.plain_code.get(1.0, END).rstrip()+"\n\n").lstrip()
-        outstring += self.doctest.get(1.0, END)
+        savefile = open(ch_filename_template.format(chap), "a")
+        outstring = ch_header_template.format(chap, self.location.get())
+        plain_code_string = self.plain_code.get(1.0, END).strip()
+        if plain_code_string:
+            outstring += plain_code_string + "\n\n"
+        doctest_string = self.doctest.get(1.0, END).strip()
+        if doctest_string:
+            outstring += doctest_string + "\n\n"
         savefile.write(outstring)
         savefile.close()
 
