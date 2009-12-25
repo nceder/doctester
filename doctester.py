@@ -18,11 +18,13 @@
 
 """
 
-import sys, subprocess
+import sys
+import subprocess
+import tempfile
+import os
 from tkinter import *
 
 python_exe = "python3"
-testfile = "test.py"
 ch_filename_template = "ch{0:0>2}_code.txt"
 ch_header_template = "{0:0>2}.{1}\n\n"
 template = """{0}\"\"\"\n{01}\n\"\"\"
@@ -141,13 +143,14 @@ class TesterGUI(PanedWindow):
         text = plaintext + text
 
         # write to testfile, call with python_exe
-        outfile = open(testfile, "w")
+        of_handle, testfile = tempfile.mkstemp(suffix=".py", text=True)
+        outfile = os.fdopen(of_handle, "w")
         outfile.write(template.format(raw,text))
         outfile.close()
 
         output = subprocess.Popen([python_exe, testfile, verbose],
                                   stdout=subprocess.PIPE).communicate()[0]
-
+        os.unlink(testfile)
         # capture output to results window...
         self.results.tag_config("out", foreground="red")
         self.results.config(state=NORMAL)
