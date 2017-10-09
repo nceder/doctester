@@ -196,13 +196,13 @@ class TesterGUI(PanedWindow):
         self.the_menu.add_command(label="Copy")
         self.the_menu.add_command(label="Paste")
 
-    def show_menu(e):
+    def show_menu(self, e):
         w = e.widget
         w.focus()
-        self.the_menu.entryconfigure("Cut", command=cut)
-        self.the_menu.entryconfigure("Copy", command=copy)
-        self.the_menu.entryconfigure("Paste", command=paste)
-        self.the_menu.tk.call("tk_popup", the_menu, e.x_root, e.y_root)
+        self.the_menu.entryconfigure("Cut", command=self.cut)
+        self.the_menu.entryconfigure("Copy", command=self.copy)
+        self.the_menu.entryconfigure("Paste", command=self.paste)
+        self.the_menu.tk.call("tk_popup", self.the_menu, e.x_root, e.y_root)
 
     def paste(self, e=None):
         if e:
