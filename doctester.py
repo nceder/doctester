@@ -24,7 +24,7 @@ import tempfile
 import os
 from tkinter import *
 
-python_exe = "python3"
+python_exe = sys.executable
 ch_filename_template = "ch{0:0>2}_code.txt"
 ch_header_template = "{0:0>2}.{1}\n\n"
 template = """{0}\"\"\"\n{01}\n\"\"\"
