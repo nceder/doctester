@@ -148,7 +148,7 @@ class TesterGUI(PanedWindow):
         text = plaintext + text
 
         # write to testfile, call with python_exe
-        of_handle, testfile = tempfile.mkstemp(suffix=".py", text=True)
+        of_handle, testfile = tempfile.mkstemp(suffix=".py", text=True, dir=os.getcwd())
         outfile = os.fdopen(of_handle, "w")
         outfile.write(template.format(raw,text))
         outfile.close()
