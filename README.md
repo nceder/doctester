@@ -38,7 +38,7 @@ Testing code snippets
 
 To test a shell code snippet, copy the interactive shell commands (prompt and all) and the output, and paste into the 'Shell code' window. You can paste either by using Ctrl-v or but right clicking and choosing paste. Then use either the Test or Full Test buttons and the results (if any) will be in the results window. A full test will give verbose output from the doctest, while the plain test will not give any output if successful.
 
-On bug is that if there was an error in running the test, there might also be no output in results window - this is something that could be improved. 
+One bug is that if there was an error in running the test, there might also be no output in results window - this is something that could be improved. 
 
 The plain code window can be used if you want to include code that isn't in interactive shell format - already defined functions, imports, etc. Doctester attempts to convert this code to shell format but prepending `>>> ` and `... `. It is expected that any output from plain code will be reflected in the shell code window.
 
